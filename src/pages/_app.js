@@ -1,5 +1,13 @@
-import "@/styles/globals.css";
+import { GeistProvider, CssBaseline } from '@geist-ui/core';
+import '@/styles/globals.scss';
 
-export default function App({ Component, pageProps }) {
-  return <Component {...pageProps} />;
-}
+const App = ({ Component, pageProps }) => {
+    return (
+        <GeistProvider>
+            <CssBaseline />
+            <Component {...pageProps} />
+        </GeistProvider>
+    );
+};
+
+export default App;

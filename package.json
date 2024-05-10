@@ -9,9 +9,12 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@geist-ui/core": "^2.3.8",
+    "firebase": "^10.11.1",
+    "next": "14.2.3",
     "react": "^18",
     "react-dom": "^18",
-    "next": "14.2.3"
+    "sass": "^1.77.0"
   },
   "devDependencies": {
     "eslint": "^8",
