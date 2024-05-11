@@ -1,7 +1,7 @@
 import { Button, Input, Text } from '@geist-ui/core';
 import { useState } from 'react';
 
-const UserSetup = () => {
+const UserSetup = ({ authUser, refreshPage }) => {
     const [name, setName] = useState('');
 
     const setupProfile = async () => {
@@ -13,14 +13,15 @@ const UserSetup = () => {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    uid: u.uid,
-                    email: u.email,
-                    displayName: u.displayName,
+                    uid: authUser.uid,
+                    email: authUser.email,
                 }),
             }
         );
-        const userData = await res.json();
-        setUserObj(userData);
+        const data = await res.json();
+        if (!data.error) {
+            refreshPage();
+        }
     };
 
     return (
@@ -28,8 +29,6 @@ const UserSetup = () => {
             <Text h4 my={0}>
                 Finish Profile
             </Text>
-            <br />
-            <br />
             <div className="form-input">
                 <Input
                     value={name}
@@ -38,7 +37,6 @@ const UserSetup = () => {
                     width="100%"
                 />
             </div>
-            <br />
             <Button
                 onClick={() => setupProfile()}
                 type="secondary"
