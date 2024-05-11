@@ -53,6 +53,49 @@ const Todos = () => {
 
     if (loading) return 'Loading...';
 
+    const redirectToCheckout = async () => {
+        const response = await fetch(
+            `${process.env.NEXT_PUBLIC_BASE_URL}/billing/stripe/createCheckoutLink`,
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    clientReferenceId: userObj?.uid,
+                    price: process.env.NEXT_PUBLIC_PRICE_ID,
+                    mode: 'subscription',
+                    quantity: 1,
+                }),
+            }
+        );
+
+        const data = await response.json();
+        if (!data.error) {
+            window.open(data.url);
+        }
+    };
+
+    const openBillingPortal = async () => {
+        const response = await fetch(
+            `${process.env.NEXT_PUBLIC_BASE_URL}/billing/stripe/portal`,
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    customer: userObj?.stripe_customer,
+                }),
+            }
+        );
+
+        const data = await response.json();
+        if (!data.error) {
+            window.open(data.url);
+        }
+    };
+
     return (
         <div className="profile-container">
             <div>
@@ -150,6 +193,31 @@ const Todos = () => {
                                 </pre>
                             </Tabs.Item>
                         </Tabs>
+                        <Text my={0}>Plan ({userObj?.status})</Text>
+                        <Text small type="secondary">
+                            Upgrade your plan
+                        </Text>
+                        <br />
+                        <Button
+                            scale={3 / 4}
+                            type="secondary"
+                            shadow
+                            onClick={() => redirectToCheckout()}
+                        >
+                            Buy
+                        </Button>
+
+                        {userObj?.stripe_customer && (
+                            <div>
+                                <br />
+                                <Button
+                                    scale={3 / 4}
+                                    onClick={() => openBillingPortal()}
+                                >
+                                    Manage plan
+                                </Button>
+                            </div>
+                        )}
                     </div>
                     {/* {JSON.stringify(userObj, null)} */}
                 </div>
